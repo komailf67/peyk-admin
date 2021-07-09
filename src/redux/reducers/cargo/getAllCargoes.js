@@ -1,27 +1,28 @@
 import produce from 'immer';
-import BaseInfoActions from '../../actions/baseInfoActions';
+import CargoActions from '../../actions/cargoActions';
 
 export const initialState = {
+  list: [],
   requesting: false,
   success: false,
   error: false,
 };
 
-/* eslint-disable default-case, no-param-reassign */
-const createCargo = (state = initialState, action) =>
+const getAllCargoes = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case BaseInfoActions.BASE_INFO.DIRECTIONS.REQUESTING:
+      case CargoActions.GET_ALL_CARGOES.REQUESTING:
         draft.requesting = true;
         draft.success = false;
         draft.error = false;
         return draft;
-      case BaseInfoActions.BASE_INFO.DIRECTIONS.SUCCESS:
+      case CargoActions.GET_ALL_CARGOES.SUCCESS:
+        draft.list = action.payload;
         draft.requesting = false;
         draft.success = true;
         draft.error = false;
         return draft;
-      case BaseInfoActions.BASE_INFO.DIRECTIONS.ERROR:
+      case CargoActions.GET_ALL_CARGOES.ERROR:
         draft.requesting = false;
         draft.success = false;
         draft.error = true;
@@ -31,4 +32,4 @@ const createCargo = (state = initialState, action) =>
     }
   });
 
-export default createCargo;
+export default getAllCargoes;

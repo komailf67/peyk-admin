@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import createCargo from './createCargo';
+import getAllCargoes from './getAllCargoes';
 
 const auth = combineReducers({
-  createCargo: createCargo,
+  cargoes: getAllCargoes,
 });
 
 export default auth;

@@ -7,6 +7,7 @@ import CheckSmsCode from '../Auth/checkSmsCode';
 import NewService from '../newService';
 import Country from '../Country';
 import Direction from '../Directions';
+import Cargo from '../Cargo';
 
 const Index = () => {
   const history = useHistory();
@@ -38,6 +39,9 @@ const Index = () => {
           </Route>
           <Route ex path="/countries">
             <Country />
+          </Route>
+          <Route ex path="/cargoes">
+            <Cargo />
           </Route>
           <Route ex path="/directions">
             <Direction />

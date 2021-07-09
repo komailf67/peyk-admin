@@ -1,11 +1,8 @@
 class CargoActions {
-  static CARGO = {
-    CREATE: {
-      REQUESTING: 'CARGO_CREATE_REQUESTING',
-      SUCCESS: 'CARGO_CREATE_SUCCESS',
-      ERROR: 'CARGO_CREATE_ERROR',
-    },
+  static GET_ALL_CARGOES = {
+    REQUESTING: 'GET_ALL_CARGOES_REQUESTING',
+    SUCCESS: 'GET_ALL_CARGOES_SUCCESS',
+    ERROR: 'GET_ALL_CARGOES_ERROR',
   };
 }
-
 export default CargoActions;

@@ -7,14 +7,15 @@ import CargoActions from '../actions/cargoActions';
 import NotificationActions from '../actions/notificationActions';
 import { ActionTypes } from '../types';
 
-function* handleCreateCargo(action) {
+function* handleGetAllCargoes(action) {
   try {
-    const res = yield call(cargoServices.create, 'CREATE_CARGO', action.payload);
+    const res = yield call(cargoServices.index, 'GET_CARGOES');
     const { data } = res;
     const { message } = data;
 
     yield put({
-      type: CargoActions.CARGO.CREATE.SUCCESS,
+      type: CargoActions.GET_ALL_CARGOES.SUCCESS,
+      payload: data,
     });
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
@@ -29,10 +30,10 @@ function* handleCreateCargo(action) {
   }
 }
 
-function* watchCreateCargo() {
-  yield takeEvery(CargoActions.CARGO.CREATE.REQUESTING, handleCreateCargo);
+function* watchGetAllCargoes() {
+  yield takeEvery(CargoActions.GET_ALL_CARGOES.REQUESTING, handleGetAllCargoes);
 }
 
 export default function* cargoSaga() {
-  yield all([fork(watchCreateCargo)]);
+  yield all([fork(watchGetAllCargoes)]);
 }

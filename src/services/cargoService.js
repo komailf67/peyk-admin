@@ -10,4 +10,12 @@ export const cargoServices = {
     const res = await axiosInstance.post(`${config.baseUrl}users/cargos`, body);
     return res;
   },
+  async verify(key, body = {}, cargoId) {
+    const res = await axiosInstance.put(`${config.baseUrl}admin/cargos/${cargoId}/verify`, body);
+    return res;
+  },
+  async reject(key, body = {}, cargoId) {
+    const res = await axiosInstance.put(`${config.baseUrl}admin/cargos/${cargoId}/reject`, body);
+    return res;
+  },
 };

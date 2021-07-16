@@ -19,35 +19,33 @@ const Index = () => {
   }, []);
   return (
     <Layout>
-      <div>
-        {/* <nav>
+      {/* <nav>
         <ul>
           <li>
             <Link to="/new-service">New Service</Link>
           </li>
         </ul>
       </nav> */}
-        <Switch>
-          <Route path="/new-service">
-            <NewService />
-          </Route>
-          <Route path="/auth/check-phone">
-            <CheckPhone />
-          </Route>
-          <Route ex path="/auth/login">
-            <CheckSmsCode />
-          </Route>
-          <Route ex path="/countries">
-            <Country />
-          </Route>
-          <Route ex path="/cargoes">
-            <Cargo />
-          </Route>
-          <Route ex path="/directions">
-            <Direction />
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/new-service">
+          <NewService />
+        </Route>
+        <Route path="/auth/check-phone">
+          <CheckPhone />
+        </Route>
+        <Route ex path="/auth/login">
+          <CheckSmsCode />
+        </Route>
+        <Route ex path="/countries">
+          <Country />
+        </Route>
+        <Route ex path="/cargoes">
+          <Cargo />
+        </Route>
+        <Route ex path="/directions">
+          <Direction />
+        </Route>
+      </Switch>
     </Layout>
   );
 };

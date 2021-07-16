@@ -45,12 +45,12 @@ export const mainListItems = (
         <ListItemText primary="Directions" />
       </ListItem>
     </Link>
-    <ListItem button>
+    {/* <ListItem button>
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
       <ListItemText primary="Integrations" />
-    </ListItem>
+    </ListItem> */}
   </div>
 );
 

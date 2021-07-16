@@ -3,7 +3,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import { TableContainer, TextField, Card, CardHeader, Button, Box } from '@material-ui/core';
+import { TableContainer, TextField, Card, CardHeader, Button, Box, Container } from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
@@ -17,7 +17,7 @@ import FormModal from '../../components/modal/FormModal';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#3E51B5',
     color: theme.palette.common.white,
   },
   body: {
@@ -46,31 +46,35 @@ const Cargo = ({ getCargoes, cargoes, verifyModal, rejectModal, verifyModalStatu
   }, []);
 
   return (
-    <>
+    <Container className={classes.container} component="main" maxWidth="md">
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>ردیف</StyledTableCell>
+              <StyledTableCell align="right">ردیف</StyledTableCell>
               <StyledTableCell align="right">مبدا</StyledTableCell>
               {/* <StyledTableCell align="right">نام فرستنده</StyledTableCell> */}
               <StyledTableCell align="right">مقصد</StyledTableCell>
               {/* <StyledTableCell align="right">نام گیرنده</StyledTableCell> */}
+              <StyledTableCell align="right">وزن</StyledTableCell>
+              <StyledTableCell align="right">قیمت بسته</StyledTableCell>
               <StyledTableCell align="right">اکشن</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {cargoes?.data?.result?.map((cargo, index) => (
               <StyledTableRow key={index}>
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell align="right" component="th" scope="row">
                   {index + 1}
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell align="right" component="th" scope="row">
                   {cargo.origin_address.address_line_one}
                 </StyledTableCell>
                 {/* <StyledTableCell align="right">{cargo.origin_address.full_name}</StyledTableCell> */}
                 <StyledTableCell align="right">{cargo.destination_address.address_line_one}</StyledTableCell>
                 {/* <StyledTableCell align="right">{cargo.destination_address.full_name}</StyledTableCell> */}
+                <StyledTableCell align="right">{cargo.weight}</StyledTableCell>
+                <StyledTableCell align="right">{cargo.value}</StyledTableCell>
                 <StyledTableCell align="right">
                   <Box>
                     <CheckCircleOutlineIcon onClick={() => verifyModal(true)} color="primary" />
@@ -101,7 +105,7 @@ const Cargo = ({ getCargoes, cargoes, verifyModal, rejectModal, verifyModalStatu
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </Container>
   );
 };
 

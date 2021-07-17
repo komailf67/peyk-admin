@@ -127,7 +127,7 @@ const Country = ({ getCountries, countries, deleteCountry, createCountry }) => {
                   <StyledTableCell>{country.iso_code}</StyledTableCell>
                   <StyledTableCell>{country.call_prefix}</StyledTableCell>
                   <StyledTableCell>
-                    <DeleteRoundedIcon onClick={() => handleDeleteCountry(country.id)} color="secondary" />
+                    <DeleteRoundedIcon onClick={() => handleDeleteCountry(country.id)} color="primary" />
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

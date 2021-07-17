@@ -8,7 +8,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import LanguageIcon from '@material-ui/icons/Language';
 import DirectionsIcon from '@material-ui/icons/Directions';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 export const mainListItems = (
   <div>
@@ -53,14 +53,21 @@ export const mainListItems = (
   </div>
 );
 
-export const secondaryListItems = (
-  <div>
-    {/* <ListSubheader inset>Saved reports</ListSubheader> */}
-    <ListItem button>
-      <ListItemIcon>
-        <ExitToAppIcon />
-      </ListItemIcon>
-      <ListItemText primary="Logout" />
-    </ListItem>
-  </div>
-);
+export const SecondaryListItems = () => {
+  const history = useHistory();
+  const logoutHandler = () => {
+    localStorage.removeItem('access_token');
+    history.push('/');
+  };
+  return (
+    <div>
+      {/* <ListSubheader inset>Saved reports</ListSubheader> */}
+      <ListItem button onClick={logoutHandler}>
+        <ListItemIcon>
+          <ExitToAppIcon />
+        </ListItemIcon>
+        <ListItemText primary="Logout" />
+      </ListItem>
+    </div>
+  );
+};

@@ -1,22 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
-
-import logo from './logo.svg';
-import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link, useHistory, withRouter } from 'react-router-dom';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Routing from './pages/Routing/index';
 import { store } from './redux/store';
 import history from './utils/history';
 import Notification from './components/notification';
+import RTL from './theme/RTL';
+import theme from './theme';
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <Router history={history}>
-        <Notification />
-        <Routing />
-      </Router>
-    </Provider>
+    <RTL>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <Provider store={store}>
+          <Router history={history}>
+            <Notification />
+            <Routing />
+          </Router>
+        </Provider>
+      </MuiThemeProvider>
+    </RTL>
   );
 };
 

@@ -109,23 +109,23 @@ const Direction = ({ getDirections, directions, deleteDirection, createDirection
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="right">ردیف</StyledTableCell>
-                <StyledTableCell align="right">مبدا</StyledTableCell>
-                <StyledTableCell align="right">مقصد</StyledTableCell>
-                <StyledTableCell align="right">اکشن</StyledTableCell>
+                <StyledTableCell>ردیف</StyledTableCell>
+                <StyledTableCell>مبدا</StyledTableCell>
+                <StyledTableCell>مقصد</StyledTableCell>
+                <StyledTableCell>اکشن</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {directions?.list?.result?.map((direction, index) => (
                 <StyledTableRow key={direction.name}>
-                  <StyledTableCell align="right" component="th" scope="row">
+                  <StyledTableCell component="th" scope="row">
                     {index + 1}
                   </StyledTableCell>
-                  <StyledTableCell align="right" component="th" scope="row">
+                  <StyledTableCell component="th" scope="row">
                     {direction.origin_country.name}
                   </StyledTableCell>
-                  <StyledTableCell align="right"> {direction.destination_country.name}</StyledTableCell>
-                  <StyledTableCell align="right">
+                  <StyledTableCell> {direction.destination_country.name}</StyledTableCell>
+                  <StyledTableCell>
                     <DeleteRoundedIcon onClick={() => handleDeleteDirection(direction.id)} color="primary" />
                   </StyledTableCell>
                 </StyledTableRow>

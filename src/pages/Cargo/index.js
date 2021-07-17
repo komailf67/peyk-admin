@@ -51,31 +51,31 @@ const Cargo = ({ getCargoes, cargoes, verifyModal, rejectModal, verifyModalStatu
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="right">ردیف</StyledTableCell>
-              <StyledTableCell align="right">مبدا</StyledTableCell>
-              {/* <StyledTableCell align="right">نام فرستنده</StyledTableCell> */}
-              <StyledTableCell align="right">مقصد</StyledTableCell>
-              {/* <StyledTableCell align="right">نام گیرنده</StyledTableCell> */}
-              <StyledTableCell align="right">وزن</StyledTableCell>
-              <StyledTableCell align="right">قیمت بسته</StyledTableCell>
-              <StyledTableCell align="right">اکشن</StyledTableCell>
+              <StyledTableCell>ردیف</StyledTableCell>
+              <StyledTableCell>مبدا</StyledTableCell>
+              {/* <StyledTableCell >نام فرستنده</StyledTableCell> */}
+              <StyledTableCell>مقصد</StyledTableCell>
+              {/* <StyledTableCell >نام گیرنده</StyledTableCell> */}
+              <StyledTableCell>وزن</StyledTableCell>
+              <StyledTableCell>قیمت بسته</StyledTableCell>
+              <StyledTableCell>اکشن</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {cargoes?.data?.result?.map((cargo, index) => (
               <StyledTableRow key={index}>
-                <StyledTableCell align="right" component="th" scope="row">
+                <StyledTableCell component="th" scope="row">
                   {index + 1}
                 </StyledTableCell>
-                <StyledTableCell align="right" component="th" scope="row">
+                <StyledTableCell component="th" scope="row">
                   {cargo.origin_address.address_line_one}
                 </StyledTableCell>
-                {/* <StyledTableCell align="right">{cargo.origin_address.full_name}</StyledTableCell> */}
-                <StyledTableCell align="right">{cargo.destination_address.address_line_one}</StyledTableCell>
-                {/* <StyledTableCell align="right">{cargo.destination_address.full_name}</StyledTableCell> */}
-                <StyledTableCell align="right">{cargo.weight}</StyledTableCell>
-                <StyledTableCell align="right">{cargo.value}</StyledTableCell>
-                <StyledTableCell align="right">
+                {/* <StyledTableCell >{cargo.origin_address.full_name}</StyledTableCell> */}
+                <StyledTableCell>{cargo.destination_address.address_line_one}</StyledTableCell>
+                {/* <StyledTableCell >{cargo.destination_address.full_name}</StyledTableCell> */}
+                <StyledTableCell>{cargo.weight}</StyledTableCell>
+                <StyledTableCell>{cargo.value}</StyledTableCell>
+                <StyledTableCell>
                   <Box>
                     <CheckCircleOutlineIcon onClick={() => verifyModal(true)} color="primary" />
                     <FormModal

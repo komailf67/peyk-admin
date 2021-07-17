@@ -108,25 +108,25 @@ const Country = ({ getCountries, countries, deleteCountry, createCountry }) => {
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="right">ردیف</StyledTableCell>
-                <StyledTableCell align="right">نام کشور</StyledTableCell>
-                <StyledTableCell align="right">iso code</StyledTableCell>
-                <StyledTableCell align="right">پیش شماره</StyledTableCell>
-                <StyledTableCell align="right">اکشن</StyledTableCell>
+                <StyledTableCell>ردیف</StyledTableCell>
+                <StyledTableCell>نام کشور</StyledTableCell>
+                <StyledTableCell>iso code</StyledTableCell>
+                <StyledTableCell>پیش شماره</StyledTableCell>
+                <StyledTableCell>اکشن</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {countries?.list?.result?.map((country, index) => (
                 <StyledTableRow key={country.name}>
-                  <StyledTableCell align="right" component="th" scope="row">
+                  <StyledTableCell component="th" scope="row">
                     {index + 1}
                   </StyledTableCell>
-                  <StyledTableCell align="right" component="th" scope="row">
+                  <StyledTableCell component="th" scope="row">
                     {country.name}
                   </StyledTableCell>
-                  <StyledTableCell align="right">{country.iso_code}</StyledTableCell>
-                  <StyledTableCell align="right">{country.call_prefix}</StyledTableCell>
-                  <StyledTableCell align="right">
+                  <StyledTableCell>{country.iso_code}</StyledTableCell>
+                  <StyledTableCell>{country.call_prefix}</StyledTableCell>
+                  <StyledTableCell>
                     <DeleteRoundedIcon onClick={() => handleDeleteCountry(country.id)} color="secondary" />
                   </StyledTableCell>
                 </StyledTableRow>

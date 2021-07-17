@@ -8,6 +8,8 @@ import NewService from '../newService';
 import Country from '../Country';
 import Direction from '../Directions';
 import Cargo from '../Cargo';
+import PublicRoute from '../../components/Routes/PublicRoute';
+import PrivateRoute from '../../components/Routes/PrivateRoute';
 
 const Index = () => {
   const history = useHistory();
@@ -27,24 +29,13 @@ const Index = () => {
         </ul>
       </nav> */}
       <Switch>
-        <Route path="/new-service">
-          <NewService />
-        </Route>
-        <Route path="/auth/check-phone">
-          <CheckPhone />
-        </Route>
-        <Route ex path="/auth/login">
-          <CheckSmsCode />
-        </Route>
-        <Route ex path="/countries">
-          <Country />
-        </Route>
-        <Route ex path="/cargoes">
-          <Cargo />
-        </Route>
-        <Route ex path="/directions">
-          <Direction />
-        </Route>
+        <PublicRoute component={CheckPhone} restricted path="/auth/check-phone" exact />
+        <PublicRoute component={CheckSmsCode} restricted path="/auth/login" exact />
+        <PrivateRoute component={Cargo} restricted path="/" exact />
+        <PrivateRoute component={NewService} restricted path="/new-service" exact />
+        <PrivateRoute component={Country} restricted path="/countries" exact />
+        <PrivateRoute component={Cargo} restricted path="/cargoes" exact />
+        <PrivateRoute component={Direction} restricted path="/directions" exact />
       </Switch>
     </Layout>
   );

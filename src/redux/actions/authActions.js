@@ -15,6 +15,10 @@ class AuthActions {
       SET_USER_INFO: 'AUTH_SET_USER_INFO',
       REDIRECT_PATH: 'AUTH_CHECK_SMS_CODE_REDIRECT_PATH',
     },
+    USER_INFO: {
+      FILL: 'AUTH_USER_INFO_FILL',
+      EMPTY: 'AUTH_USER_INFO_EMPTY',
+    },
   };
 }
 

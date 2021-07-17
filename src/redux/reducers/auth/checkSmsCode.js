@@ -2,6 +2,7 @@ import produce from 'immer';
 import AuthActions from '../../actions/authActions';
 
 export const initialState = {
+  list: [],
   requesting: false,
   success: false,
   error: false,
@@ -17,6 +18,7 @@ const checkSmsCode = (state = initialState, action) =>
         draft.error = false;
         return draft;
       case AuthActions.AUTH.CHECK_SMS_CODE.SUCCESS:
+        draft.list = action.payload;
         draft.requesting = false;
         draft.success = true;
         draft.error = false;

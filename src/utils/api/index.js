@@ -1,4 +1,6 @@
 import axios, { Canceler } from 'axios';
+import AuthActions from '../../redux/actions/authActions';
+import { store } from '../../redux/store';
 
 let cancel = [];
 
@@ -19,6 +21,9 @@ export const axiosInstance = axios.create({
 // Add a response interceptor
 axiosInstance.interceptors.request.use(
   function (response) {
+    if (!!token === false && store.getState()?.auth?.userInfo?.list?.token) {
+      response.headers.Authorization = `Bearer ${store.getState()?.auth?.userInfo?.list?.token}`;
+    }
     const CancelToken = axios.CancelToken;
     // const access_token = localStorage.getItem('token');
     // if (access_token) {
@@ -40,6 +45,15 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   function (response) {
+    if (response?.data?.data?.token) {
+      /**
+       * userinfo set in this section
+       * because after login, when the next api called, localStorage.getItem('access_token) returns null
+       */
+      store.dispatch({ type: AuthActions.AUTH.USER_INFO.FILL, payload: response.data.data });
+      localStorage.setItem('access_token', response.data.data.token);
+    }
+
     cancel = cancel.filter((fid) => {
       return fid[0] !== response.config.url;
     });

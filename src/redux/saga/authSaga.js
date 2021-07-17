@@ -33,19 +33,16 @@ function* handleCheckPhone(action) {
     });
   }
 }
-function forwardTo(location) {
-  history.push(location);
-}
+
 function* handleCheckSms(action) {
   try {
     const res = yield call(AuthService.login, 'login', action.payload);
     const { data } = res;
     const { message } = data;
-    localStorage.setItem('access_token', data.data.token);
-
-    yield put({
-      type: AuthActions.AUTH.CHECK_SMS_CODE.SUCCESS,
-    });
+    /**
+     * userinfo set in redux in utils/api file
+     * because after login, when the next api called, localStorage.getItem('access_token) returns null
+     */
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
       payload: message,

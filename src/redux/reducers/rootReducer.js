@@ -5,6 +5,7 @@ import cargo from './cargo';
 import notification from './notification';
 import country from './country';
 import direction from './direction';
+import redirect from './redirect';
 
 const rootReducer = combineReducers({
   auth,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   notification,
   country,
   direction,
+  redirect,
 });
 
 export default rootReducer;

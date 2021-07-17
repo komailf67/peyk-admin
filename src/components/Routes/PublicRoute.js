@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import isLogin from '../../utils/isLogin';
 
 const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-  return <Route {...rest} render={(props) => (isLogin() && restricted ? <Redirect to="/new-service" /> : <Component {...props} />)} />;
+  return <Route {...rest} render={(props) => (isLogin() && restricted ? <Redirect to="/cargoes" /> : <Component {...props} />)} />;
 };
 
 export default PublicRoute;

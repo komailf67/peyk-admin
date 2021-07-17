@@ -3,6 +3,7 @@ import { AuthService } from '../../services/authService';
 import history from '../../utils/history';
 import AuthActions from '../actions/authActions';
 import NotificationActions from '../actions/notificationActions';
+import RedirectActions from '../actions/redirectActions';
 
 function* handleCheckPhone(action) {
   try {
@@ -17,6 +18,10 @@ function* handleCheckPhone(action) {
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
       payload: message,
+    });
+    yield put({
+      type: RedirectActions.FILL,
+      payload: '/auth/login',
     });
     // yield call(forwardTo, '/auth/login');
 
@@ -44,6 +49,10 @@ function* handleCheckSms(action) {
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
       payload: message,
+    });
+    yield put({
+      type: RedirectActions.FILL,
+      payload: '/cargoes',
     });
   } catch (err) {
     yield put({

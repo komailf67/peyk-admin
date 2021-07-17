@@ -32,7 +32,6 @@ const Index = () => {
         <PublicRoute component={CheckPhone} restricted path="/auth/check-phone" exact />
         <PublicRoute component={CheckSmsCode} restricted path="/auth/login" exact />
         <PrivateRoute component={Cargo} restricted path="/" exact />
-        <PrivateRoute component={NewService} restricted path="/new-service" exact />
         <PrivateRoute component={Country} restricted path="/countries" exact />
         <PrivateRoute component={Cargo} restricted path="/cargoes" exact />
         <PrivateRoute component={Direction} restricted path="/directions" exact />

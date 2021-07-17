@@ -9,6 +9,7 @@ import history from './utils/history';
 import Notification from './components/notification';
 import RTL from './theme/RTL';
 import theme from './theme';
+import RedirectComponent from './components/RedirectComponent';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <CssBaseline />
         <Provider store={store}>
           <Router history={history}>
+            <RedirectComponent />
             <Notification />
             <Routing />
           </Router>

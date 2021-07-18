@@ -46,6 +46,9 @@ const useStyles = makeStyles({
   formControl: {
     minWidth: 100,
   },
+  icon: {
+    cursor: 'pointer',
+  },
 });
 
 const Direction = ({ getDirections, directions, deleteDirection, createDirection, countries, getCountries }) => {
@@ -126,7 +129,7 @@ const Direction = ({ getDirections, directions, deleteDirection, createDirection
                   </StyledTableCell>
                   <StyledTableCell> {direction.destination_country.name}</StyledTableCell>
                   <StyledTableCell>
-                    <DeleteRoundedIcon onClick={() => handleDeleteDirection(direction.id)} color="primary" />
+                    <DeleteRoundedIcon onClick={() => handleDeleteDirection(direction.id)} color="primary" className={classes.icon} />
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

@@ -37,6 +37,9 @@ const useStyles = makeStyles({
   table: {
     minWidth: 700,
   },
+  icon: {
+    cursor: 'pointer',
+  },
 });
 
 const Cargo = ({ getCargoes, cargoes, verifyModal, rejectModal, verifyModalStatus, rejectModalStatus, verifyCargo, rejectCargo }) => {
@@ -77,7 +80,7 @@ const Cargo = ({ getCargoes, cargoes, verifyModal, rejectModal, verifyModalStatu
                 <StyledTableCell>{cargo.value}</StyledTableCell>
                 <StyledTableCell>
                   <Box>
-                    <CheckCircleOutlineIcon onClick={() => verifyModal(true)} color="primary" />
+                    <CheckCircleOutlineIcon className={classes.icon} onClick={() => verifyModal(true)} color="primary" />
                     <FormModal
                       title="Verify"
                       placeholder="قیمت"
@@ -88,7 +91,7 @@ const Cargo = ({ getCargoes, cargoes, verifyModal, rejectModal, verifyModalStatu
                     />
                   </Box>
                   <Box>
-                    <CancelIcon onClick={() => rejectModal(true)} color="primary" status={() => rejectModal(true)} />
+                    <CancelIcon className={classes.icon} onClick={() => rejectModal(true)} color="primary" status={() => rejectModal(true)} />
                     <FormModal
                       title="Reject"
                       placeholder="دلیل ریجکت"

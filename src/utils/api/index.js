@@ -50,8 +50,11 @@ axiosInstance.interceptors.response.use(
        * userinfo set in this section
        * because after login, when the next api called, localStorage.getItem('access_token) returns null
        */
-      store.dispatch({ type: AuthActions.AUTH.USER_INFO.FILL, payload: response.data.data });
-      localStorage.setItem('access_token', response.data.data.token);
+
+      if (response?.data.data.is_admin) {
+        store.dispatch({ type: AuthActions.AUTH.USER_INFO.FILL, payload: response.data.data });
+        localStorage.setItem('access_token', response.data.data.token);
+      }
     }
 
     cancel = cancel.filter((fid) => {

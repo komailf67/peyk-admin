@@ -43,6 +43,14 @@ function* handleCheckSms(action) {
      * userinfo set in redux in utils/api file
      * because after login, when the next api called, localStorage.getItem('access_token) returns null
      */
+    if (data?.data?.is_admin === false) {
+      yield put({
+        type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+        payload: {
+          message: 'شما نمیتوانید به بخش ادمین دسترسی داشته باشید',
+        },
+      });
+    }
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
       payload: message,

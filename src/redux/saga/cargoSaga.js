@@ -9,7 +9,7 @@ import { ActionTypes } from '../types';
 
 function* handleGetAllCargoes(action) {
   try {
-    const res = yield call(cargoServices.index, 'GET_CARGOES');
+    const res = yield call(cargoServices.index, 'GET_CARGOES', action.payload);
     const { data } = res;
     const { message } = data;
 
@@ -40,6 +40,7 @@ function* handleVerifyCargo(action) {
     });
     yield put({
       type: CargoActions.GET_ALL_CARGOES.REQUESTING,
+      payload: 'pending',
     });
     yield put({
       type: CargoActions.VERIFY_MODAL_STATUS,
@@ -68,6 +69,7 @@ function* handleRejectCargo(action) {
     });
     yield put({
       type: CargoActions.GET_ALL_CARGOES.REQUESTING,
+      payload: 'pending',
     });
     yield put({
       type: CargoActions.REJECT_MODAL_STATUS,
@@ -86,6 +88,57 @@ function* handleRejectCargo(action) {
   }
 }
 
+function* ChangeToShippedCargo(action) {
+  try {
+    const res = yield call(cargoServices.shipped, 'CHANGE_TO_SHIPPED', action.payload);
+    const { data } = res;
+    const { message } = data;
+
+    yield put({
+      type: CargoActions.CHANGE_STATE_TO_SHIPPED.SUCCESS,
+    });
+    yield put({
+      type: CargoActions.GET_ALL_CARGOES.REQUESTING,
+      payload: 'paid',
+    });
+    yield put({
+      type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
+      payload: message,
+    });
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err?.response?.data,
+    });
+    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
+  }
+}
+function* ChangeToDeliveredCargo(action) {
+  try {
+    const res = yield call(cargoServices.delivered, 'CHANGE_TO_DELIVERED', action.payload);
+    const { data } = res;
+    const { message } = data;
+
+    yield put({
+      type: CargoActions.CHANGE_STATE_TO_DELIVERED.SUCCESS,
+    });
+    yield put({
+      type: CargoActions.GET_ALL_CARGOES.REQUESTING,
+      payload: 'shipped',
+    });
+    yield put({
+      type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
+      payload: message,
+    });
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err?.response?.data,
+    });
+    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
+  }
+}
+
 function* watchGetAllCargoes() {
   yield takeEvery(CargoActions.GET_ALL_CARGOES.REQUESTING, handleGetAllCargoes);
 }
@@ -95,7 +148,13 @@ function* watchVerifyCargo() {
 function* watchRejectCargo() {
   yield takeEvery(CargoActions.REJECT_CARGO.REQUESTING, handleRejectCargo);
 }
+function* watchChangeToShippedCargo() {
+  yield takeEvery(CargoActions.CHANGE_STATE_TO_SHIPPED.REQUESTING, ChangeToShippedCargo);
+}
+function* watchChangeToDeliveredCargo() {
+  yield takeEvery(CargoActions.CHANGE_STATE_TO_DELIVERED.REQUESTING, ChangeToDeliveredCargo);
+}
 
 export default function* cargoSaga() {
-  yield all([fork(watchGetAllCargoes), fork(watchVerifyCargo), fork(watchRejectCargo)]);
+  yield all([fork(watchGetAllCargoes), fork(watchVerifyCargo), fork(watchRejectCargo), fork(watchChangeToShippedCargo), fork(watchChangeToDeliveredCargo)]);
 }

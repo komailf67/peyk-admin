@@ -25,6 +25,9 @@ const createCountry = (state = initialState, action) =>
         draft.success = false;
         draft.error = true;
         return draft;
+      case CountryActions.CREATE_COUNTRY.FORM_SUBMIT_STATE:
+        draft.success = action.payload;
+        return draft;
       default:
         return draft;
     }

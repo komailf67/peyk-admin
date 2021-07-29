@@ -52,7 +52,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Country = ({ getCountries, countries, deleteCountry, createCountry }) => {
+const Country = ({ getCountries, countries, deleteCountry, createCountry, isFormSubmitted, changeCountryFormSubmitState }) => {
   const classes = useStyles();
   useEffect(() => {
     getCountries();
@@ -72,6 +72,12 @@ const Country = ({ getCountries, countries, deleteCountry, createCountry }) => {
       // resetForm();
     },
   });
+  useEffect(() => {
+    if (isFormSubmitted) {
+      formik.resetForm();
+      changeCountryFormSubmitState(false);
+    }
+  }, [isFormSubmitted]);
   return (
     <Container className={classes.container} component="main" maxWidth="md">
       <Grid container spacing={3}>
@@ -145,6 +151,7 @@ const Country = ({ getCountries, countries, deleteCountry, createCountry }) => {
 const mapStateToProps = (state) => {
   return {
     countries: state.country.countries,
+    isFormSubmitted: state.country.createCountry.success,
   };
 };
 
@@ -158,6 +165,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteCountry: (countryId) => {
       dispatch({ type: CountryActions.DELETE_COUNTRY.REQUESTING, payload: countryId });
+    },
+    changeCountryFormSubmitState: (state) => {
+      dispatch({
+        type: CountryActions.CREATE_COUNTRY.FORM_SUBMIT_STATE,
+        payload: state,
+      });
     },
   };
 };

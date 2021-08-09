@@ -15,9 +15,9 @@ const CheckPhone = ({ checkPhoneNumber, reset_password, checkPhoneResponse }) =>
     const phoneNumber = parseInt(phone, 10);
     const countryId = 9;
     checkPhoneNumber({
-      phone: `989144062667`,
+      // phone: `989144062667`,
       // phone: `989142667`,
-      // phone: `${phonePrefix}${phoneNumber}`,
+      phone: `${phonePrefix}${phoneNumber}`,
       // country_id: countryId,
       // reset_password: reset_password,
     });

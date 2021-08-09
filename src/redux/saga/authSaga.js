@@ -13,7 +13,7 @@ function* handleCheckPhone(action) {
     yield put({
       type: AuthActions.AUTH.CHECK_PHONE.SUCCESS,
       // payload: data.data.phone,
-      payload: '989144062667',
+      payload: data?.data?.phone,
     });
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,

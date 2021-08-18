@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,6 +18,7 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems, SecondaryListItems } from './partials/listItems';
+import { useLocation } from 'react-router-dom';
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 // import Orders from './Orders';
@@ -117,8 +118,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Layout = ({ children }) => {
+  const location = useLocation();
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [showSideMenu, setShowSideMenu] = React.useState(false);
+  useEffect(() => {
+    location?.pathname?.includes('/auth') ? setShowSideMenu(false) : setShowSideMenu(true);
+  }, [location.pathname]);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -126,8 +133,7 @@ const Layout = ({ children }) => {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-  return (
+  return showSideMenu ? (
     <div className={classes.root}>
       {/* <CssBaseline /> */}
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
@@ -189,11 +195,13 @@ const Layout = ({ children }) => {
         </Container>
       </main>
     </div>
+  ) : (
     // <div className="komail">
     //   <p>sdfdfdsffdfd</p>
     //   {children}
     //   <p>sdfdfdsffdfd</p>
     // </div>
+    <>{children}</>
   );
 };
 

@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
-import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Box, StylesProvider } from '@material-ui/core';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { MenuItem, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Select, InputLabel, FormControl } from '@material-ui/core';
 import FormModal from '../../components/modal/FormModal';
 import CargoActions from '../../redux/actions/cargoActions';
 
-import PaymentIcon from '@material-ui/icons/Payment';
-import CancelIcon from '@material-ui/icons/Cancel';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import DoneAllIcon from '@material-ui/icons/DoneAll';
 import { connect } from 'react-redux';
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -18,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     cursor: 'pointer',
   },
+  select: { minWidth: '120px' },
   actionColumn: { display: 'flex', flexDirection: 'row' },
 }));
 const StyledTableCell = withStyles((theme) => ({
@@ -37,21 +33,21 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const CargoTable = ({ cargoes, rejectCargo, stateEnum, pay, verifyModal, rejectModal, rejectModalStatus, verifyModalStatus, verifyCargo, changeStateToDelivered, changeStateToShipped }) => {
+const CargoTable = ({ cargoes, stateEnum, changableStates, changeCargoState }) => {
   const [selectedCargoId, setSelectedCargoId] = useState('');
+  const [open, setOpen] = useState(false);
+  const [selectedState, setSelectedState] = useState(false);
   const classes = useStyles();
-  const handlePayment = (cargoId) => {
-    pay(cargoId);
-  };
-  console.log('sssssssssssssssssss', selectedCargoId);
-  // const actions = {pending:{icon}}
-  const verifyHandler = (cargoId) => {
-    verifyModal(true);
+
+  const handleChangeAction = (event, value) => {
+    const { selected, cargoId } = value.props;
     setSelectedCargoId(cargoId);
-  };
-  const rejectHandler = (cargoId) => {
-    rejectModal(true);
-    setSelectedCargoId(cargoId);
+    if (!!selected.needed_field) {
+      setSelectedState(selected);
+      setOpen(true);
+    } else {
+      changeCargoState(null, null, cargoId, selected.id, setOpen, stateEnum);
+    }
   };
   return (
     <>
@@ -66,7 +62,7 @@ const CargoTable = ({ cargoes, rejectCargo, stateEnum, pay, verifyModal, rejectM
               {/* <StyledTableCell >نام گیرنده</StyledTableCell> */}
               <StyledTableCell>وزن</StyledTableCell>
               <StyledTableCell>قیمت بسته</StyledTableCell>
-              {['pending', 'paid', 'shipped'].indexOf(stateEnum) > -1 ? <StyledTableCell>اکشن</StyledTableCell> : null}
+              {changableStates.length > 0 ? <StyledTableCell>اکشن</StyledTableCell> : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -83,36 +79,33 @@ const CargoTable = ({ cargoes, rejectCargo, stateEnum, pay, verifyModal, rejectM
                 {/* <StyledTableCell >{cargo.destination_address.full_name}</StyledTableCell> */}
                 <StyledTableCell>{cargo.weight}</StyledTableCell>
                 <StyledTableCell>{cargo.value}</StyledTableCell>
-                {['pending', 'paid', 'shipped'].indexOf(stateEnum) > -1 ? (
-                  <StyledTableCell className={classes.actionColumn}>
-                    <Box>
-                      {stateEnum === 'pending' ? <CheckCircleOutlineIcon className={classes.icon} onClick={() => verifyHandler(cargo.id)} color="primary" /> : null}
-                      {stateEnum === 'paid' ? <LocalShippingIcon className={classes.icon} onClick={() => changeStateToShipped(cargo.id)} color="primary" /> : null}
-                      <FormModal
-                        title="Verify"
-                        placeholder="قیمت"
-                        inputType="number"
-                        status={verifyModalStatus}
-                        acceptButtonFunc={(body) => verifyCargo(body, selectedCargoId)}
-                        cancelButtonFunc={() => verifyModal(false)}
-                        cargo={cargo}
-                      />
-                    </Box>
-                    <Box>
-                      {stateEnum === 'pending' ? <CancelIcon className={classes.icon} onClick={() => rejectHandler(cargo.id)} color="primary" /> : null}
-                      {stateEnum === 'shipped' ? <DoneAllIcon className={classes.icon} onClick={() => changeStateToDelivered(cargo.id)} color="primary" /> : null}
-                      <FormModal
-                        title="Reject"
-                        placeholder="دلیل ریجکت"
-                        inputType="text"
-                        status={rejectModalStatus}
-                        acceptButtonFunc={(body) => rejectCargo(body, selectedCargoId)}
-                        cancelButtonFunc={() => rejectModal(false)}
-                      />
-                      {/* <FormModal title="Verify" placeholder="قیمت" /> */}
-                    </Box>
-                  </StyledTableCell>
-                ) : null}
+                {changableStates.length > 0 && (
+                  <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-label">Choose One</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      className={classes.select}
+                      // value={value}
+                      onChange={handleChangeAction}
+                    >
+                      {changableStates.length > 0 &&
+                        changableStates?.map((item, index) => (
+                          <MenuItem key={index} selected={item} value={cargo.id} cargoId={cargo.id}>
+                            {item.action_name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                )}
+                <FormModal
+                  title={selectedState.action_name}
+                  placeholder={selectedState.needed_field}
+                  inputType="text"
+                  status={open}
+                  acceptButtonFunc={(body) => changeCargoState(selectedState.needed_field, body, selectedCargoId, selectedState.id, setOpen, stateEnum)}
+                  cancelButtonFunc={() => setOpen(false)}
+                />
               </StyledTableRow>
             ))}
           </TableBody>
@@ -130,26 +123,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCargoes: () => {
-      dispatch({ type: CargoActions.GET_ALL_CARGOES.REQUESTING });
-    },
-    verifyModal: (status) => {
-      dispatch({ type: CargoActions.VERIFY_MODAL_STATUS, payload: status });
-    },
-    rejectModal: (status) => {
-      dispatch({ type: CargoActions.REJECT_MODAL_STATUS, payload: status });
-    },
-    verifyCargo: (data, cargoId) => {
-      dispatch({ type: CargoActions.VERIFY_CARGO.REQUESTING, payload: { body: { cost: data }, cargoId: cargoId } });
-    },
-    rejectCargo: (data, cargoId) => {
-      dispatch({ type: CargoActions.REJECT_CARGO.REQUESTING, payload: { body: { reject_reason: data }, cargoId: cargoId } });
-    },
-    changeStateToShipped: (cargoId) => {
-      dispatch({ type: CargoActions.CHANGE_STATE_TO_SHIPPED.REQUESTING, payload: cargoId });
-    },
-    changeStateToDelivered: (cargoId) => {
-      dispatch({ type: CargoActions.CHANGE_STATE_TO_DELIVERED.REQUESTING, payload: cargoId });
+    changeCargoState: (key, data, cargoId, stateId, setOpen, stateEnum) => {
+      dispatch({ type: CargoActions.CHANGE_CARGO_STATE.REQUESTING, payload: { body: key ? { [key]: data } : null, cargoId: cargoId, stateId, setOpen, stateEnum } });
     },
   };
 };

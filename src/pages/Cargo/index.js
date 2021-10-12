@@ -22,48 +22,38 @@ const useStyles = makeStyles({
   },
 });
 
-const Cargo = ({ getCargoes, cargoes }) => {
+const Cargo = ({ getCargoes, cargoes, getCargoesStates, cargoesStates }) => {
   const classes = useStyles();
-  const states = ['pending', 'verified', 'paid', 'shipped', 'delivered', 'rejected'];
-  const [value, setValue] = useState(states.indexOf('pending'));
+  const [value, setValue] = useState(0);
+  const [cargoState, setCargoState] = useState({ value: 0, stateName: '' });
+  const states = cargoesStates.result?.map((item) => item.slug);
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setCargoState({ value: newValue, stateName: event.target.innerText });
   };
   useEffect(() => {
-    getCargoes(states[value]);
-  }, [value]);
-
+    getCargoesStates(); //TODO: runs twice
+  }, []);
+  useEffect(() => {
+    if (!!states && states.length > 0) {
+      getCargoes(states[value]);
+    }
+  }, [value, states?.length]);
   return (
     <Container className={classes.container} component="main" maxWidth="xl">
       <div className={classes.root}>
         <Paper square>
           <Tabs value={value} indicatorColor="primary" textColor="primary" onChange={handleChange} aria-label="disabled tabs example">
-            <Tab label="در حال بررسی" {...a11yProps(states.indexOf('pending'))} />
-            <Tab label="تایید شده" {...a11yProps(states.indexOf('verified'))} />
-            <Tab label="پرداخت شده" {...a11yProps(states.indexOf('paid'))} />
-            <Tab label="فرستاده شده" {...a11yProps(states.indexOf('shipped'))} />
-            <Tab label="تحویل داده شده" {...a11yProps(states.indexOf('delivered'))} />
-            <Tab label="رد شده" {...a11yProps(states.indexOf('rejected'))} />
+            {cargoesStates.result?.map((item) => (
+              <Tab label={item.name} {...a11yProps(states.indexOf(item.slug))} />
+            ))}
           </Tabs>
         </Paper>
-        <TabPanel value={value} index={states.indexOf('pending')}>
-          <CargoTable cargoes={cargoes} stateEnum={states[value]} />
-        </TabPanel>
-        <TabPanel value={value} index={states.indexOf('verified')}>
-          <CargoTable cargoes={cargoes} stateEnum={states[value]} />
-        </TabPanel>
-        <TabPanel value={value} index={states.indexOf('paid')}>
-          <CargoTable cargoes={cargoes} stateEnum={states[value]} />
-        </TabPanel>
-        <TabPanel value={value} index={states.indexOf('delivered')}>
-          <CargoTable cargoes={cargoes} stateEnum={states[value]} />
-        </TabPanel>
-        <TabPanel value={value} index={states.indexOf('shipped')}>
-          <CargoTable cargoes={cargoes} stateEnum={states[value]} />
-        </TabPanel>
-        <TabPanel value={value} index={states.indexOf('rejected')}>
-          <CargoTable cargoes={cargoes} stateEnum={states[value]} />
-        </TabPanel>
+        {cargoesStates.result?.map((item, index) => (
+          <TabPanel value={cargoState.value} index={index}>
+            <CargoTable cargoes={cargoes} stateEnum={item.slug} changableStates={item.changeable_state} />
+          </TabPanel>
+        ))}
       </div>
     </Container>
   );
@@ -74,6 +64,7 @@ const mapStateToProps = (state) => {
     cargoes: state.cargo.cargoes.list,
     verifyModalStatus: state.cargo.cargoModalsStatus.verifyCargoStatus,
     rejectModalStatus: state.cargo.cargoModalsStatus.rejectCargoStatus,
+    cargoesStates: state.cargo.cargoesStates.list,
   };
 };
 
@@ -81,6 +72,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getCargoes: (state) => {
       dispatch({ type: CargoActions.GET_ALL_CARGOES.REQUESTING, payload: state });
+    },
+    getCargoesStates: () => {
+      dispatch({ type: CargoActions.GET_ALL_CARGOES_STATES.REQUESTING });
     },
   };
 };

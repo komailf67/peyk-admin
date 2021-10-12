@@ -1,18 +1,13 @@
-import { call, put, fork, all, takeEvery, select } from 'redux-saga/effects';
+import { call, put, fork, all, takeEvery, takeLatest } from 'redux-saga/effects';
 import { cargoServices } from '../../services/cargoService';
-import history from '../../utils/history';
-import AuthActions from '../actions/authActions';
-import BaseInfoActions from '../actions/baseInfoActions';
 import CargoActions from '../actions/cargoActions';
 import NotificationActions from '../actions/notificationActions';
-import { ActionTypes } from '../types';
 
 function* handleGetAllCargoes(action) {
   try {
     const res = yield call(cargoServices.index, 'GET_CARGOES', action.payload);
     const { data } = res;
     const { message } = data;
-
     yield put({
       type: CargoActions.GET_ALL_CARGOES.SUCCESS,
       payload: data,
@@ -26,7 +21,22 @@ function* handleGetAllCargoes(action) {
       type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
       payload: err.response.data,
     });
-    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
+  }
+}
+function* handleGetAllCargoesStates() {
+  try {
+    const res = yield call(cargoServices.getCargoesStates, 'GET_CARGOES_STATES');
+    const { data } = res;
+
+    yield put({
+      type: CargoActions.GET_ALL_CARGOES_STATES.SUCCESS,
+      payload: data.data,
+    });
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err.response.data,
+    });
   }
 }
 function* handleVerifyCargo(action) {
@@ -55,7 +65,6 @@ function* handleVerifyCargo(action) {
       type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
       payload: err.response.data,
     });
-    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
   }
 }
 function* handleRejectCargo(action) {
@@ -84,7 +93,6 @@ function* handleRejectCargo(action) {
       type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
       payload: err.response.data,
     });
-    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
   }
 }
 
@@ -110,7 +118,6 @@ function* ChangeToShippedCargo(action) {
       type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
       payload: err?.response?.data,
     });
-    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
   }
 }
 function* ChangeToDeliveredCargo(action) {
@@ -135,15 +142,41 @@ function* ChangeToDeliveredCargo(action) {
       type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
       payload: err?.response?.data,
     });
-    // yield put({ type: ActionTypes.AUTH.CHECK_PHONE.ERROR });
+  }
+}
+function* handleChangeCargoState(action) {
+  try {
+    const { body, cargoId, stateId, setOpen, stateEnum } = action.payload;
+    const res = yield call(cargoServices.changeState, 'CHANGE_CARGO_STATE', body, cargoId, stateId);
+    setOpen(false);
+    yield put({
+      type: CargoActions.GET_ALL_CARGOES.REQUESTING,
+      payload: stateEnum,
+    });
+    const { message } = res.data;
+    yield put({
+      type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
+      payload: message,
+    });
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err?.response?.data,
+    });
   }
 }
 
 function* watchGetAllCargoes() {
   yield takeEvery(CargoActions.GET_ALL_CARGOES.REQUESTING, handleGetAllCargoes);
 }
+function* watchGetAllCargoesStates() {
+  yield takeLatest(CargoActions.GET_ALL_CARGOES_STATES.REQUESTING, handleGetAllCargoesStates);
+}
 function* watchVerifyCargo() {
   yield takeEvery(CargoActions.VERIFY_CARGO.REQUESTING, handleVerifyCargo);
+}
+function* watchChangeCargoState() {
+  yield takeEvery(CargoActions.CHANGE_CARGO_STATE.REQUESTING, handleChangeCargoState);
 }
 function* watchRejectCargo() {
   yield takeEvery(CargoActions.REJECT_CARGO.REQUESTING, handleRejectCargo);
@@ -156,5 +189,14 @@ function* watchChangeToDeliveredCargo() {
 }
 
 export default function* cargoSaga() {
-  yield all([fork(watchGetAllCargoes), fork(watchVerifyCargo), fork(watchRejectCargo), fork(watchChangeToShippedCargo), fork(watchChangeToDeliveredCargo)]);
+  yield all([
+    fork(watchGetAllCargoes),
+    fork(watchVerifyCargo),
+    fork(watchChangeCargoState),
+    fork(watchRejectCargo),
+    fork(watchChangeToShippedCargo),
+    fork(watchChangeToDeliveredCargo),
+    fork(watchChangeCargoState),
+    fork(watchGetAllCargoesStates),
+  ]);
 }

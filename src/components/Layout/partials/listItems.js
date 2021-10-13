@@ -3,7 +3,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import LayersIcon from '@material-ui/icons/Layers';
+import GroupIcon from '@material-ui/icons/Group';
+// import LayersIcon from '@material-ui/icons/Layers';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import LanguageIcon from '@material-ui/icons/Language';
@@ -18,6 +19,14 @@ export const mainListItems = (
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
+      </ListItem>
+    </Link>
+    <Link to="/users">
+      <ListItem button>
+        <ListItemIcon>
+          <GroupIcon />
+        </ListItemIcon>
+        <ListItemText primary="Users" />
       </ListItem>
     </Link>
     <Link to="/countries">

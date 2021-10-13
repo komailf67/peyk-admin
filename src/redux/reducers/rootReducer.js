@@ -6,6 +6,7 @@ import notification from './notification';
 import country from './country';
 import direction from './direction';
 import redirect from './redirect';
+import user from './user';
 
 const rootReducer = combineReducers({
   auth,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   country,
   direction,
   redirect,
+  user,
 });
 
 export default rootReducer;

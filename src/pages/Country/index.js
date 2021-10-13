@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import { TableContainer, TextField, Card, CardHeader, Button, Box, Grid, Container, Typography } from '@material-ui/core';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import { Paper, TableRow, TableHead, TableContainer, TextField, Card, TableBody, Button, Table, Grid, Container, Typography, TableCell } from '@material-ui/core';
 import { connect } from 'react-redux';
 import CountryActions from '../../redux/actions/countryActions';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';

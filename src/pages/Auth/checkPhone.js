@@ -87,7 +87,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => ({
   checkPhoneNumber(data) {
-    dispatch({ type: AuthActions.AUTH.CHECK_PHONE.REQUESTING, payload: data });
+    dispatch({ type: AuthActions.CHECK_PHONE.REQUESTING, payload: data });
   },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(CheckPhone);

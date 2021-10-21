@@ -56,7 +56,7 @@ const CargoTable = ({ cargoes, stateEnum, changableStates, changeCargoState }) =
           <TableHead>
             <TableRow>
               <StyledTableCell>ردیف</StyledTableCell>
-              <StyledTableCell>مبدا</StyledTableCell>
+              <StyledTableCell>مسیر</StyledTableCell>
               {/* <StyledTableCell >نام فرستنده</StyledTableCell> */}
               <StyledTableCell>مقصد</StyledTableCell>
               {/* <StyledTableCell >نام گیرنده</StyledTableCell> */}

@@ -20,4 +20,8 @@ export const AuthService = {
     // const res = axios.post(`${config.baseUrl}users/auth/login`, body);
     return res;
   },
+  async update(body = {}) {
+    const res = await axiosInstance.put(`${config.baseUrl}users/profile`, body);
+    return res;
+  },
 };

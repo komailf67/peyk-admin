@@ -8,7 +8,7 @@ export const initialState = {
 const userInfo = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case AuthActions.AUTH.USER_INFO.FILL:
+      case AuthActions.USER_INFO.FILL:
         draft.list = action.payload;
         return draft;
       default:

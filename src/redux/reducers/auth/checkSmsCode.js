@@ -12,18 +12,18 @@ export const initialState = {
 const checkSmsCode = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case AuthActions.AUTH.CHECK_SMS_CODE.REQUESTING:
+      case AuthActions.CHECK_SMS_CODE.REQUESTING:
         draft.requesting = true;
         draft.success = false;
         draft.error = false;
         return draft;
-      case AuthActions.AUTH.CHECK_SMS_CODE.SUCCESS:
+      case AuthActions.CHECK_SMS_CODE.SUCCESS:
         draft.list = action.payload;
         draft.requesting = false;
         draft.success = true;
         draft.error = false;
         return draft;
-      case AuthActions.AUTH.CHECK_SMS_CODE.ERROR:
+      case AuthActions.CHECK_SMS_CODE.ERROR:
         draft.requesting = false;
         draft.success = false;
         draft.error = true;

@@ -1,4 +1,4 @@
-import { call, put, fork, all, takeEvery, select } from 'redux-saga/effects';
+import { call, put, fork, all, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { AuthService } from '../../services/authService';
 import history from '../../utils/history';
 import AuthActions from '../actions/authActions';
@@ -11,7 +11,7 @@ function* handleCheckPhone(action) {
     const { data } = res;
     const { message } = data;
     yield put({
-      type: AuthActions.AUTH.CHECK_PHONE.SUCCESS,
+      type: AuthActions.CHECK_PHONE.SUCCESS,
       // payload: data.data.phone,
       payload: data?.data?.phone,
     });
@@ -50,7 +50,37 @@ function* handleCheckSms(action) {
           message: 'شما نمیتوانید به بخش ادمین دسترسی داشته باشید',
         },
       });
+    } else {
+      if (data.data?.name === null) {
+        yield put({ type: AuthActions.CHANGE_FULLNAME_MODAL_STATUS, payload: true });
+      } else {
+        yield put({
+          type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
+          payload: message,
+        });
+        yield put({
+          type: RedirectActions.FILL,
+          payload: '/cargoes',
+        });
+      }
     }
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err.response.data,
+    });
+  }
+}
+function* handleUpdateFullName(action) {
+  try {
+    const res = yield call(AuthService.update, action.payload);
+    const { data } = res;
+    const { message } = data;
+    /**
+     * userinfo set in redux in utils/api file
+     * because after login, when the next api called, localStorage.getItem('access_token) returns null
+     */
+    yield put({ type: AuthActions.CHANGE_FULLNAME_MODAL_STATUS, payload: false });
     yield put({
       type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
       payload: message,
@@ -68,13 +98,16 @@ function* handleCheckSms(action) {
 }
 
 function* watchCheckPhone() {
-  yield takeEvery(AuthActions.AUTH.CHECK_PHONE.REQUESTING, handleCheckPhone);
+  yield takeEvery(AuthActions.CHECK_PHONE.REQUESTING, handleCheckPhone);
 }
 
 function* watchCheckSmsCode() {
-  yield takeEvery(AuthActions.AUTH.CHECK_SMS_CODE.REQUESTING, handleCheckSms);
+  yield takeEvery(AuthActions.CHECK_SMS_CODE.REQUESTING, handleCheckSms);
+}
+function* watchUpdateProfile() {
+  yield takeEvery(AuthActions.UPDATE_PROFILE.REQUESTING, handleUpdateFullName);
 }
 
 export default function* authSaga() {
-  yield all([fork(watchCheckPhone), fork(watchCheckSmsCode)]);
+  yield all([fork(watchCheckPhone), fork(watchCheckSmsCode), fork(watchUpdateProfile)]);
 }

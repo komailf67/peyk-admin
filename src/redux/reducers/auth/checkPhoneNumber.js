@@ -12,23 +12,23 @@ export const initialState = {
 const checkPhoneNumber = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case AuthActions.AUTH.CHECK_PHONE.REQUESTING:
+      case AuthActions.CHECK_PHONE.REQUESTING:
         draft.requesting = true;
         draft.success = false;
         draft.error = false;
         return draft;
-      case AuthActions.AUTH.CHECK_PHONE.SUCCESS:
+      case AuthActions.CHECK_PHONE.SUCCESS:
         draft.phoneNumber = action.payload;
         draft.requesting = false;
         draft.success = true;
         draft.error = false;
         return draft;
-      case AuthActions.AUTH.CHECK_PHONE.ERROR:
+      case AuthActions.CHECK_PHONE.ERROR:
         draft.requesting = false;
         draft.success = false;
         draft.error = true;
         return draft;
-      case AuthActions.AUTH.CHECK_PHONE.EMPTY:
+      case AuthActions.CHECK_PHONE.EMPTY:
         draft.requesting = false;
         draft.success = false;
         draft.error = true;

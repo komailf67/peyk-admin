@@ -1,5 +1,5 @@
-class RedirectActions {
-  static FILL = 'FILL';
-  static EMPTY = 'EMPTY';
-}
+const RedirectActions = {
+  FILL: 'FILL',
+  EMPTY: 'EMPTY',
+};
 export default RedirectActions;

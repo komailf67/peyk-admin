@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
        */
 
       if (response?.data.data.is_admin) {
-        store.dispatch({ type: AuthActions.AUTH.USER_INFO.FILL, payload: response.data.data });
+        store.dispatch({ type: AuthActions.USER_INFO.FILL, payload: response.data.data });
         localStorage.setItem('access_token', response.data.data.token);
       }
     }

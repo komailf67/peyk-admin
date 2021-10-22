@@ -3,7 +3,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import { TableContainer, TextField, Card, CardHeader, Button, Box, FormControl, InputLabel, MenuItem, Select, Container, Grid, Typography } from '@material-ui/core';
+import { TableContainer, TextField, Card, Switch, Button, Box, FormControl, InputLabel, MenuItem, Select, Container, Grid, Typography } from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
@@ -30,10 +30,6 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
@@ -51,10 +47,11 @@ const useStyles = makeStyles({
   },
 });
 
-const Direction = ({ getDirections, directions, deleteDirection, createDirection, countries, getCountries }) => {
+const Direction = ({ getDirections, directions, deleteDirection, createDirection, countries, getCountries, changeDirectionState }) => {
   const classes = useStyles();
   const [originCountry, setOriginCountry] = useState('');
   const [destinationCountry, setDestinationCountry] = useState('');
+  const [description, setDescription] = useState('');
   useEffect(() => {
     getDirections();
     getCountries();
@@ -71,7 +68,10 @@ const Direction = ({ getDirections, directions, deleteDirection, createDirection
     setDestinationCountry(event.target.value);
   };
   const handleCreateDirection = () => {
-    createDirection({ origin_country_id: originCountry, destination_country_id: destinationCountry });
+    createDirection({ origin_country_id: originCountry, destination_country_id: destinationCountry, description: description, is_active: true });
+  };
+  const handleChangeDirectionState = (directionId) => {
+    changeDirectionState(directionId);
   };
   return (
     <Container className={classes.container} component="main" maxWidth="md">
@@ -101,6 +101,11 @@ const Direction = ({ getDirections, directions, deleteDirection, createDirection
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={12}>
+              <Grid item xs={6} sm={6}>
+                <TextField id="name" label="توضیحات" value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={1} rowsMax={2} />
+              </Grid>
+            </Grid>
             <Grid item xs={12} sm={4}>
               <Button type="button" variant="contained" color="primary" className={classes.submit} onClick={handleCreateDirection}>
                 Submit
@@ -115,6 +120,8 @@ const Direction = ({ getDirections, directions, deleteDirection, createDirection
                 <StyledTableCell>ردیف</StyledTableCell>
                 <StyledTableCell>مبدا</StyledTableCell>
                 <StyledTableCell>مقصد</StyledTableCell>
+                <StyledTableCell>توضیحات</StyledTableCell>
+                <StyledTableCell>وضعیت</StyledTableCell>
                 <StyledTableCell>اکشن</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -128,6 +135,10 @@ const Direction = ({ getDirections, directions, deleteDirection, createDirection
                     {direction.origin_country.name}
                   </StyledTableCell>
                   <StyledTableCell> {direction.destination_country.name}</StyledTableCell>
+                  <StyledTableCell> {direction.description?.length > 20 ? direction.description.slice(0, 30) + '...' : direction.description}</StyledTableCell>
+                  <StyledTableCell>
+                    <Switch checked={direction.is_active} onChange={() => handleChangeDirectionState(direction.id)} name="checkedA" inputProps={{ 'aria-label': 'secondary checkbox' }} />
+                  </StyledTableCell>
                   <StyledTableCell>
                     <DeleteRoundedIcon onClick={() => handleDeleteDirection(direction.id)} color="primary" className={classes.icon} />
                   </StyledTableCell>
@@ -161,6 +172,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteDirection: (directionId) => {
       dispatch({ type: DirectionActions.DELETE_DIRECTION.REQUESTING, payload: directionId });
+    },
+    changeDirectionState: (state) => {
+      dispatch({ type: DirectionActions.CHANGE_STATE.REQUESTING, payload: state });
     },
   };
 };

@@ -14,4 +14,8 @@ export const DirectionServices = {
     const res = await axiosInstance.post(`${config.baseUrl}admin/directions`, body);
     return res;
   },
+  async changeState(directionId) {
+    const res = await axiosInstance.patch(`${config.baseUrl}admin/directions/${directionId}/change-state`);
+    return res;
+  },
 };

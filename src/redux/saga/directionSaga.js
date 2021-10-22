@@ -1,4 +1,4 @@
-import { call, put, fork, all, takeEvery, select } from 'redux-saga/effects';
+import { call, put, fork, all, takeEvery, select, takeLatest } from 'redux-saga/effects';
 import { BaseInfoServices } from '../../services/baseInfoServices';
 import { DirectionServices } from '../../services/directionServices';
 import history from '../../utils/history';
@@ -78,6 +78,25 @@ function* handleDeleteDirection(action) {
     });
   }
 }
+function* handleChangeState(action) {
+  try {
+    const res = yield call(DirectionServices.changeState, action.payload);
+    const { data } = res;
+    const { message } = data;
+    yield put({
+      type: NotificationActions.NOTIFICATION.SUCCESS.SET_SUCCESS_RESPONSE,
+      payload: message,
+    });
+    yield put({
+      type: DirectionActions.GET_ALL_DIRECTIONS.REQUESTING,
+    });
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err.response.data,
+    });
+  }
+}
 
 function* watchGetAllDirections() {
   yield takeEvery(DirectionActions.GET_ALL_DIRECTIONS.REQUESTING, handleGetAllDirections);
@@ -89,5 +108,5 @@ function* watchDeleteDirections() {
   yield takeEvery(DirectionActions.DELETE_DIRECTION.REQUESTING, handleDeleteDirection);
 }
 export default function* countrySaga() {
-  yield all([fork(watchGetAllDirections), fork(watchCreateDirections), fork(watchDeleteDirections)]);
+  yield all([fork(watchGetAllDirections), fork(watchCreateDirections), fork(watchDeleteDirections), takeLatest(DirectionActions.CHANGE_STATE.REQUESTING, handleChangeState)]);
 }

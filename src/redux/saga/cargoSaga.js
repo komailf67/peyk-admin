@@ -5,7 +5,7 @@ import NotificationActions from '../actions/notificationActions';
 
 function* handleGetAllCargoes(action) {
   try {
-    const res = yield call(cargoServices.index, 'GET_CARGOES', action.payload);
+    const res = yield call(cargoServices.index, action.payload);
     const { data } = res;
     const { message } = data;
     yield put({
@@ -165,6 +165,21 @@ function* handleChangeCargoState(action) {
     });
   }
 }
+function* getUserCargoes(action) {
+  try {
+    const res = yield call(cargoServices.index, action.payload);
+    const { data } = res.data;
+    yield put({
+      type: CargoActions.GET_USER_CARGOES.SUCCESS,
+      payload: data,
+    });
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err?.response?.data,
+    });
+  }
+}
 
 function* watchGetAllCargoes() {
   yield takeEvery(CargoActions.GET_ALL_CARGOES.REQUESTING, handleGetAllCargoes);
@@ -187,6 +202,9 @@ function* watchChangeToShippedCargo() {
 function* watchChangeToDeliveredCargo() {
   yield takeEvery(CargoActions.CHANGE_STATE_TO_DELIVERED.REQUESTING, ChangeToDeliveredCargo);
 }
+function* watchGetUserCargoes() {
+  yield takeEvery(CargoActions.GET_USER_CARGOES.REQUESTING, getUserCargoes);
+}
 
 export default function* cargoSaga() {
   yield all([
@@ -198,5 +216,6 @@ export default function* cargoSaga() {
     fork(watchChangeToDeliveredCargo),
     fork(watchChangeCargoState),
     fork(watchGetAllCargoesStates),
+    fork(watchGetUserCargoes),
   ]);
 }

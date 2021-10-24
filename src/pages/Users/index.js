@@ -1,27 +1,12 @@
 import React, { useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import {
-  Paper,
-  TableRow,
-  TableHead,
-  TableContainer,
-  TextField,
-  Card,
-  TableBody,
-  Button,
-  Table,
-  Grid,
-  Container,
-  Typography,
-  TableCell,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@material-ui/core';
-import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import { Paper, TableRow, TableHead, TableContainer, TableBody, Table, Grid, Container, Typography, TableCell, FormControl, Select, MenuItem } from '@material-ui/core';
 import { connect } from 'react-redux';
 import UserTypes from '../../redux/actions/userActions';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import RawModal from '../../components/modal/RawModal';
+import CargoTable from '../../components/Tables/CargoTable';
+import CargoActions from '../../redux/actions/cargoActions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,17 +31,20 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-const Users = ({ getUsers, users, changeUserState, changeUserRole }) => {
+const Users = ({ getUsers, users, changeUserState, changeUserRole, getUserCargoes, changeUserCargoesModalState, userCargoesModalState, userCargoes }) => {
   const classes = useStyles();
   useEffect(() => {
     getUsers();
   }, []);
-  console.log('nnnnnnnnnnnnnnnnnnnnnnnnn', users);
   const handleChangeState = (userId) => {
     changeUserState(userId);
   };
   const handleChangeUserRole = (userId) => {
     changeUserRole(userId);
+  };
+  const handleShowUserCargoes = (userId) => {
+    changeUserCargoesModalState(true);
+    getUserCargoes({ user_id: userId });
   };
   return (
     <Container className={classes.container} component="main" maxWidth="md">
@@ -74,8 +62,8 @@ const Users = ({ getUsers, users, changeUserState, changeUserRole }) => {
                 <StyledTableCell>تاریخ ثبت نام</StyledTableCell>
                 <StyledTableCell>وضعیت</StyledTableCell>
                 <StyledTableCell>نوع کاربر</StyledTableCell>
-                <StyledTableCell>لیست درخواست ها</StyledTableCell>
-                <StyledTableCell>لیست سفارش ها</StyledTableCell>
+                <StyledTableCell>درخواست ها</StyledTableCell>
+                {/* <StyledTableCell>لیست سفارش ها</StyledTableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -90,7 +78,7 @@ const Users = ({ getUsers, users, changeUserState, changeUserRole }) => {
                   <StyledTableCell component="th" scope="row">
                     {user.phone}
                   </StyledTableCell>
-                  <StyledTableCell>{user.date}</StyledTableCell>
+                  <StyledTableCell>{user.created_at}</StyledTableCell>
                   <StyledTableCell>
                     <FormControl className={classes.formControl}>
                       <Select labelId="demo-simple-select-label" id="demo-simple-select" className={classes.select} value={user.is_banned} onChange={() => handleChangeState(user.id)}>
@@ -115,13 +103,18 @@ const Users = ({ getUsers, users, changeUserState, changeUserRole }) => {
                       </Select>
                     </FormControl>
                   </StyledTableCell>
-                  <StyledTableCell>{/* <DeleteRoundedIcon className={classes.icon} onClick={() => handleDeleteCountry(country.id)} color="primary" /> */}</StyledTableCell>
+                  <StyledTableCell>
+                    <VisibilityIcon className={classes.icon} onClick={() => handleShowUserCargoes(user.id)} color="primary" />
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Grid>
+      <RawModal status={userCargoesModalState} cancelButtonFunc={() => changeUserCargoesModalState(false)}>
+        <CargoTable cargoes={{ data: userCargoes }} changableStates={[]} />
+      </RawModal>
     </Container>
   );
 };
@@ -129,6 +122,8 @@ const Users = ({ getUsers, users, changeUserState, changeUserRole }) => {
 const mapStateToProps = (state) => {
   return {
     users: state.user.users.list,
+    userCargoes: state.cargo.userCargoes.list,
+    userCargoesModalState: state.cargo.cargoModals.userCargoesModalStatus,
   };
 };
 
@@ -142,6 +137,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     changeUserRole: (userId) => {
       dispatch({ type: UserTypes.CHANGE_ROLE.REQUESTING, payload: userId });
+    },
+    getUserCargoes: (params) => {
+      dispatch({ type: CargoActions.GET_USER_CARGOES.REQUESTING, payload: params });
+    },
+    changeUserCargoesModalState: (state) => {
+      dispatch({ type: CargoActions.USER_CARGOES_MODAL_STATE, payload: state });
     },
   };
 };

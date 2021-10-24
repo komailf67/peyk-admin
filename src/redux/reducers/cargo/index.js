@@ -7,6 +7,8 @@ import rejectCargo from './rejectCargo';
 import changeToShipped from './changeToShipped';
 import changeToDelivered from './changeToDelivered';
 import cargoesStates from './cargoesStates';
+import userCargoes from './userCargoes';
+import cargoModals from './cargoModals';
 
 const auth = combineReducers({
   cargoes: getAllCargoes,
@@ -16,6 +18,8 @@ const auth = combineReducers({
   changeToShipped,
   changeToDelivered,
   cargoesStates,
+  userCargoes,
+  cargoModals,
 });
 
 export default auth;

@@ -2,8 +2,8 @@ import { config } from '../config';
 import { axiosInstance } from '../utils/api';
 
 export const cargoServices = {
-  async index(key, state) {
-    const res = await axiosInstance.get(`${config.baseUrl}admin/cargos?cargo_state=${state}`);
+  async index(params) {
+    const res = await axiosInstance.get(`${config.baseUrl}admin/cargos`, { params: params });
     return res;
   },
   async getCargoesStates() {

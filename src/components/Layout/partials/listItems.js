@@ -37,6 +37,14 @@ export const mainListItems = (
         <ListItemText primary="Countries" />
       </ListItem>
     </Link>
+    <Link to="/states">
+      <ListItem button>
+        <ListItemIcon>
+          <LanguageIcon />
+        </ListItemIcon>
+        <ListItemText primary="States" />
+      </ListItem>
+    </Link>
     <Link to="/cargoes">
       <ListItem button>
         <ListItemIcon>

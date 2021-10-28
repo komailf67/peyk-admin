@@ -5,9 +5,10 @@ import cargoSaga from './cargoSaga';
 import countrySaga from './countrySaga';
 import directionSaga from './directionSaga';
 import userSaga from './userSaga';
+import stateSaga from './stateSaga';
 
 export default function* rootSaga() {
-  yield all([authSaga(), baseInfoSaga(), cargoSaga(), countrySaga(), directionSaga(), userSaga()]);
+  yield all([authSaga(), baseInfoSaga(), cargoSaga(), countrySaga(), directionSaga(), userSaga(), stateSaga()]);
 }
 
 /* eslint-disable no-console */

@@ -11,6 +11,7 @@ import Cargo from '../Cargo';
 import PublicRoute from '../../components/Routes/PublicRoute';
 import PrivateRoute from '../../components/Routes/PrivateRoute';
 import Users from '../Users';
+import States from '../States';
 
 const Index = () => {
   const history = useHistory();
@@ -35,6 +36,7 @@ const Index = () => {
         <PrivateRoute component={Cargo} restricted path="/" exact />
         <PrivateRoute component={Users} restricted path="/users" exact />
         <PrivateRoute component={Country} restricted path="/countries" exact />
+        <PrivateRoute component={States} restricted path="/states" exact />
         <PrivateRoute component={Cargo} restricted path="/cargoes" exact />
         <PrivateRoute component={Direction} restricted path="/directions" exact />
       </Switch>

@@ -7,6 +7,7 @@ import country from './country';
 import direction from './direction';
 import redirect from './redirect';
 import user from './user';
+import state from './state';
 
 const rootReducer = combineReducers({
   auth,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   direction,
   redirect,
   user,
+  state,
 });
 
 export default rootReducer;

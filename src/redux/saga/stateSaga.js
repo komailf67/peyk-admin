@@ -32,6 +32,21 @@ function* handleCreateState(action) {
     });
   }
 }
+function* handleUpdateState(action) {
+  try {
+    const { stateId, params } = action.payload;
+    yield call(stateServices.updateState, stateId, params);
+    yield put({
+      type: stateTypes.GET_ALL_STATES.REQUESTING,
+    });
+    action.payload.resetForm();
+  } catch (err) {
+    yield put({
+      type: NotificationActions.NOTIFICATION.ERROR.SET_ERROR_RESPONSE,
+      payload: err.response.data,
+    });
+  }
+}
 function* handleDeleteState(action) {
   try {
     yield call(stateServices.deleteState, action.payload);
@@ -51,5 +66,6 @@ export default function* authSaga() {
     takeLatest(stateTypes.GET_ALL_STATES.REQUESTING, handleGetStates),
     takeLatest(stateTypes.CREATE_STATE.REQUESTING, handleCreateState),
     takeLatest(stateTypes.DELETE_STATE.REQUESTING, handleDeleteState),
+    takeLatest(stateTypes.UPDATE_STATE.REQUESTING, handleUpdateState),
   ]);
 }

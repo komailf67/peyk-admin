@@ -14,6 +14,11 @@ const stateTypes = {
     SUCCESS: 'DELETE_STATE_SUCCESS',
     ERROR: 'DELETE_STATE_ERROR',
   },
+  UPDATE_STATE: {
+    REQUESTING: 'UPDATE_STATE_REQUESTING',
+    SUCCESS: 'UPDATE_STATE_SUCCESS',
+    ERROR: 'UPDATE_STATE_ERROR',
+  },
 };
 
 export default stateTypes;

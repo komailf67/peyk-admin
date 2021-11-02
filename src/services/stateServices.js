@@ -11,6 +11,10 @@ export const stateServices = {
     const res = await axiosInstance.post(`${config.baseUrl}admin/states`, params);
     return res;
   },
+  async updateState(stateId, params) {
+    const res = await axiosInstance.put(`${config.baseUrl}admin/states/${stateId}`, params);
+    return res;
+  },
   async deleteState(stateId) {
     const res = await axiosInstance.delete(`${config.baseUrl}admin/states/${stateId}`);
     return res;

@@ -3,13 +3,14 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import { TableContainer, TextField, Card, Switch, Button, Input, FormControl, InputLabel, MenuItem, Select, Container, Grid, Typography, Checkbox, ListItemText } from '@material-ui/core';
+import { TableContainer, TextField, Card, Box, Button, Input, FormControl, InputLabel, MenuItem, Select, Container, Grid, Typography, Checkbox, ListItemText } from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
 import DirectionActions from '../../redux/actions/directionActions';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import EditIcon from '@material-ui/icons/Edit';
 import CountryActions from '../../redux/actions/countryActions';
 import stateTypes from '../../redux/actions/stateTypes';
 import { useFormik } from 'formik';
@@ -50,6 +51,12 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '100%',
     // maxWidth: 300,
   },
+  actions: {
+    display: 'flex',
+  },
+  buttons: {
+    display: 'flex',
+  },
 }));
 
 const ITEM_HEIGHT = 48;
@@ -63,28 +70,51 @@ const MenuProps = {
   },
 };
 
-const States = ({ getStates, states, deleteDirection, createDirection, createState, changeDirectionState, deleteState }) => {
+const States = ({ getStates, states, updateState, createDirection, createState, changeDirectionState, deleteState }) => {
   const classes = useStyles();
-
+  const [formState, setFormState] = useState('create');
+  const init = {
+    name: '',
+    slug: '',
+    needed_field: '',
+    action_name: '',
+    changeable_states: [],
+    stateId: '',
+  };
+  const [initialValues, setInitialValues] = useState(init);
   useEffect(() => {
     getStates();
   }, []);
-
+  const handleResetForm = () => {
+    setFormState('create');
+    setInitialValues(init);
+  };
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      slug: '',
-      needed_field: '',
-      action_name: '',
-      changeable_states: [],
-    },
+    initialValues: initialValues,
+
     onSubmit: (values) => {
-      createState(values, formik.resetForm);
+      if (formState === 'create') {
+        createState(values, formik.resetForm);
+      } else {
+        updateState(values.stateId, values, handleResetForm);
+      }
     },
+    enableReinitialize: true,
   });
 
   const handleDeleteState = (stateId) => {
     deleteState(stateId);
+  };
+  const handleEditState = (state) => {
+    setFormState('edit');
+    setInitialValues({
+      name: state.name ?? '',
+      slug: state.slug ?? '',
+      needed_field: state.needed_field ?? '',
+      action_name: state.action_name ?? '',
+      changeable_states: Array.isArray(state.changeable_state) ? state.changeable_state.map((item) => item.id) : [],
+      stateId: state.id,
+    });
   };
 
   return (
@@ -163,10 +193,27 @@ const States = ({ getStates, states, deleteDirection, createDirection, createSta
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                  Submit
-                </Button>
+              <Grid item xs={12} sm={12} className={classes.buttons}>
+                <Box>
+                  <Button type="submit" variant="contained" color="primary" className={classes.submit}>
+                    Submit
+                  </Button>
+                </Box>
+                <Box paddingLeft={'1rem'}>
+                  <Button
+                    type="button"
+                    variant="contained"
+                    color="secondary"
+                    className={classes.submit}
+                    onClick={() => {
+                      formik.resetForm();
+                      setFormState('create');
+                      setInitialValues(init);
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </Card>
@@ -207,8 +254,13 @@ const States = ({ getStates, states, deleteDirection, createDirection, createSta
                     {/* <StyledTableCell>
                       <Switch checked={state.is_active} onChange={() => handleChangeDirectionState(state.id)} name="checkedA" inputProps={{ 'aria-label': 'secondary checkbox' }} />
                     </StyledTableCell> */}
-                    <StyledTableCell>
-                      <DeleteRoundedIcon onClick={() => handleDeleteState(state.id)} color="primary" className={classes.icon} />
+                    <StyledTableCell className={classes.actions}>
+                      <Box paddingRight={'1rem'}>
+                        <DeleteRoundedIcon onClick={() => handleDeleteState(state.id)} color="primary" className={classes.icon} />
+                      </Box>
+                      <Box>
+                        <EditIcon onClick={() => handleEditState(state)} color="primary" className={classes.icon} />
+                      </Box>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -235,6 +287,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     createState: (params, resetForm) => {
       dispatch({ type: stateTypes.CREATE_STATE.REQUESTING, payload: { params, resetForm } });
+    },
+    updateState: (stateId, params, resetForm) => {
+      dispatch({ type: stateTypes.UPDATE_STATE.REQUESTING, payload: { stateId, params, resetForm } });
     },
     deleteState: (stateId) => {
       dispatch({ type: stateTypes.DELETE_STATE.REQUESTING, payload: stateId });
